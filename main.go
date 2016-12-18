@@ -1,16 +1,48 @@
 package main
 
 import (
+	"bufio"
+	"fmt"
 	"io"
 	"log"
 	"net"
+	"strings"
 )
+
+var handlers = map[string]func(w io.Writer, args string){
+	"example": exampleHandler,
+}
 
 func handleConnection(c net.Conn) {
 	log.Println("Accepted connection from:", c.RemoteAddr())
-	io.Copy(c, c)
-	log.Println("Client served:", c.RemoteAddr())
-	c.Close()
+
+	defer func() {
+		log.Println("Client served:", c.RemoteAddr())
+		c.Close()
+	}()
+
+	scanner := bufio.NewScanner(c)
+	writer := bufio.NewWriter(c)
+	for scanner.Scan() {
+		line := strings.TrimSpace(scanner.Text())
+		if len(line) == 0 {
+			continue
+		}
+
+		var key string
+		fmt.Sscanf(line, "%s", &key)
+		key = strings.ToLower(key)
+
+		args := strings.TrimSpace(line[len(key):])
+
+		h, ok := handlers[key]
+		if !ok {
+			continue
+		}
+
+		h(writer, args)
+		writer.Flush()
+	}
 }
 
 func main() {

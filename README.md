@@ -1,2 +1,4 @@
 # go-useless-db
-Useless DB written in Go. KPI, 5th semester, Parallel and Distributed Computations course
+KPI, 5th semester, Parallel and Distributed Computations course
+
+Useless DB written in Go. Stores collection of records of fixed structure in JSON.

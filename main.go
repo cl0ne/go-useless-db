@@ -26,13 +26,15 @@ var db = NewDatabase()
 func handleConnection(c net.Conn) {
 	log.Println("Accepted connection from:", c.RemoteAddr())
 	motd(c, "")
+
+	writer := bufio.NewWriter(c)
 	defer func() {
 		log.Println("Client served:", c.RemoteAddr())
+		writer.Flush()
 		c.Close()
 	}()
 
 	scanner := bufio.NewScanner(c)
-	writer := bufio.NewWriter(c)
 	for scanner.Scan() {
 		line := strings.TrimSpace(scanner.Text())
 		if len(line) == 0 {
@@ -42,6 +44,11 @@ func handleConnection(c net.Conn) {
 		var key string
 		fmt.Sscanf(line, "%s", &key)
 		key = strings.ToLower(key)
+
+		if key == "exit" {
+			fmt.Fprintln(writer, "Bye!")
+			return
+		}
 
 		args := strings.TrimSpace(line[len(key):])
 

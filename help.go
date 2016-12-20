@@ -6,7 +6,8 @@ import (
 )
 
 func help(w io.Writer, args string) {
-	fmt.Fprintln(w, "motd <index>")
+	fmt.Fprintln(w, "Available commands:")
+	fmt.Fprintln(w, "motd")
 	fmt.Fprintln(w, "   show MOTD again")
 	fmt.Fprintln(w, "insert <index> <json>")
 	fmt.Fprintln(w, "   insert record at index")
@@ -17,9 +18,9 @@ func help(w io.Writer, args string) {
 	fmt.Fprintln(w, "delete <index>")
 	fmt.Fprintln(w, "   delete record at index")
 	fmt.Fprintln(w, "clear")
-	fmt.Fprintln(w, "   clear all collection")
+	fmt.Fprintln(w, "   clear collection")
 	fmt.Fprintln(w, "len")
 	fmt.Fprintln(w, "   get collection's length")
 	fmt.Fprintln(w, "exit")
-	fmt.Fprintln(w, "   just exit from DB")
+	fmt.Fprintln(w, "   disconnect from server")
 }

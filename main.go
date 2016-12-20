@@ -11,13 +11,21 @@ import (
 
 var handlers = map[string]func(w io.Writer, args string){
 	"example": exampleHandler,
+	"help":    help,
+	"motd":    motd,
+	"insert":  handleInsert,
+	"update":  handleUpdate,
+	"delete":  handleDelete,
+	"get":     handleGet,
+	"len":     handleLen,
+	"clear":   handleClear,
 }
 
 var db = NewDatabase()
 
 func handleConnection(c net.Conn) {
 	log.Println("Accepted connection from:", c.RemoteAddr())
-
+	motd(c, "")
 	defer func() {
 		log.Println("Client served:", c.RemoteAddr())
 		c.Close()

@@ -1,8 +1,8 @@
 package main
 
 type record struct {
-	amount int
-	name   string
+	Amount int
+	Name   string
 }
 
 type database struct {
@@ -10,7 +10,7 @@ type database struct {
 }
 
 func NewDatabase() *database {
-	return &database{records: make([]record, 4)}
+	return &database{records: make([]record, 0, 4)}
 }
 
 func (db *database) get(index int) (r record, ok bool) {
@@ -30,7 +30,7 @@ func (db *database) length() int {
 }
 
 func (db *database) clear() {
-	db.records = make([]record, 4)
+	db.records = make([]record, 0, 4)
 }
 
 func (db *database) remove(index int) bool {

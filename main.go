@@ -13,6 +13,8 @@ var handlers = map[string]func(w io.Writer, args string){
 	"example": exampleHandler,
 }
 
+var db = NewDatabase()
+
 func handleConnection(c net.Conn) {
 	log.Println("Accepted connection from:", c.RemoteAddr())
 

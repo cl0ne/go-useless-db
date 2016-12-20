@@ -1,11 +1,14 @@
 package main
 
+import "sync"
+
 type record struct {
 	Amount int
 	Name   string
 }
 
 type database struct {
+	sync.RWMutex
 	records []record
 }
 
@@ -14,6 +17,8 @@ func NewDatabase() *database {
 }
 
 func (db *database) get(index int) (r record, ok bool) {
+	db.RLock()
+	defer db.RUnlock()
 	if !db.isValidIndex(index) {
 		return record{}, false
 	}
@@ -26,14 +31,20 @@ func (db *database) isValidIndex(index int) bool {
 }
 
 func (db *database) length() int {
+	db.RLock()
+	defer db.RUnlock()
 	return len(db.records)
 }
 
 func (db *database) clear() {
+	db.Lock()
+	defer db.Unlock()
 	db.records = make([]record, 0, 4)
 }
 
 func (db *database) remove(index int) bool {
+	db.Lock()
+	defer db.Unlock()
 	if !db.isValidIndex(index) {
 		return false
 	}
@@ -44,6 +55,8 @@ func (db *database) remove(index int) bool {
 }
 
 func (db *database) insert(index int, r record) bool {
+	db.Lock()
+	defer db.Unlock()
 	if index < 0 || index > db.length() {
 		return false
 	}
@@ -56,6 +69,8 @@ func (db *database) insert(index int, r record) bool {
 }
 
 func (db *database) update(index int, r record) bool {
+	db.Lock()
+	defer db.Unlock()
 	if !db.isValidIndex(index) {
 		return false
 	}

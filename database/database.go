@@ -27,12 +27,16 @@ func (db *Database) Get(index int) (r Record, ok bool) {
 }
 
 func (db *Database) isValidIndex(index int) bool {
-	return index >= 0 && index < db.Length()
+	return index >= 0 && index < db.length()
 }
 
 func (db *Database) Length() int {
 	db.RLock()
 	defer db.RUnlock()
+	return db.length()
+}
+
+func (db *Database) length() int {
 	return len(db.records)
 }
 
@@ -60,7 +64,7 @@ func (db *Database) Remove(index int) bool {
 func (db *Database) Insert(index int, r Record) bool {
 	db.Lock()
 	defer db.Unlock()
-	if index < 0 || index > db.Length() {
+	if index < 0 || index > db.length() {
 		return false
 	}
 

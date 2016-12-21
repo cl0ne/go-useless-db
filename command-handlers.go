@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io"
 	"strings"
+
+	"github.com/cl0ne/go-useless-db/database"
 )
 
 func min(x, y int) int {
@@ -14,7 +16,7 @@ func min(x, y int) int {
 	return y
 }
 
-func parseRecord(w io.Writer, r *record, j string) (ok bool) {
+func parseRecord(w io.Writer, r *database.Record, j string) (ok bool) {
 	err := json.Unmarshal([]byte(j), r)
 	ok = (err == nil)
 	if !ok {
@@ -38,12 +40,12 @@ func handleInsert(w io.Writer, args string) {
 		return
 	}
 
-	var r record
+	var r database.Record
 	if !parseRecord(w, &r, values[1]) {
 		return
 	}
 
-	ok := db.insert(index, r)
+	ok := db.Insert(index, r)
 	if ok {
 		fmt.Fprintln(w, "OK")
 	} else {
@@ -63,7 +65,7 @@ func handleGet(w io.Writer, args string) {
 		return
 	}
 
-	r, ok := db.get(index)
+	r, ok := db.Get(index)
 	if !ok {
 		fmt.Fprintf(w, "Error: %d is not valid index.\n", index)
 		return
@@ -93,11 +95,11 @@ func handleUpdate(w io.Writer, args string) {
 		fmt.Fprintln(w, "Failed to get index:", err)
 		return
 	}
-	var r record
+	var r database.Record
 	if !parseRecord(w, &r, values[1]) {
 		return
 	}
-	ok := db.update(index, r)
+	ok := db.Update(index, r)
 	if !ok {
 		fmt.Fprintf(w, "Error: %d is not valid index.\n", index)
 		return
@@ -106,7 +108,7 @@ func handleUpdate(w io.Writer, args string) {
 }
 
 func handleLen(w io.Writer, args string) {
-	fmt.Fprintln(w, "The length of DB:", db.length())
+	fmt.Fprintln(w, "The length of DB:", db.Length())
 }
 
 func handleDelete(w io.Writer, args string) {
@@ -122,7 +124,7 @@ func handleDelete(w io.Writer, args string) {
 		return
 	}
 
-	ok := db.remove(index)
+	ok := db.Remove(index)
 	if !ok {
 		fmt.Fprintln(w, "Invalid index")
 		return
@@ -131,6 +133,6 @@ func handleDelete(w io.Writer, args string) {
 }
 
 func handleClear(w io.Writer, args string) {
-	db.clear()
+	db.Clear()
 	fmt.Fprintln(w, "DB is empty")
 }

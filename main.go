@@ -7,6 +7,8 @@ import (
 	"log"
 	"net"
 	"strings"
+
+	"github.com/cl0ne/go-useless-db/database"
 )
 
 var handlers = map[string]func(w io.Writer, args string){
@@ -21,7 +23,7 @@ var handlers = map[string]func(w io.Writer, args string){
 	"clear":   handleClear,
 }
 
-var db = NewDatabase()
+var db = database.NewDatabase()
 
 func handleConnection(c net.Conn) {
 	log.Println("Accepted connection from:", c.RemoteAddr())

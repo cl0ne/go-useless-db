@@ -1,14 +1,12 @@
-package main
+package database
 
 import (
 	"testing"
-
-	"github.com/cl0ne/go-useless-db/database"
 )
 
 func TestInsert(t *testing.T) {
-	db_test := database.NewDatabase()
-	records := []database.Record{
+	db_test := NewDatabase()
+	records := []Record{
 		{Amount: 1, Name: "data"},
 		{Amount: -1, Name: "shot"},
 		{Name: "rock", Amount: 40000},
@@ -22,8 +20,8 @@ func TestInsert(t *testing.T) {
 }
 
 func TestRemove(t *testing.T) {
-	db_test := database.NewDatabase()
-	records := []database.Record{
+	db_test := NewDatabase()
+	records := []Record{
 		{Amount: 1, Name: "data"},
 		{Amount: -1, Name: "shot"},
 		{Name: "rock", Amount: 40000},
@@ -52,8 +50,8 @@ func TestRemove(t *testing.T) {
 }
 
 func TestUpdate(t *testing.T) {
-	db_test := database.NewDatabase()
-	records := []database.Record{
+	db_test := NewDatabase()
+	records := []Record{
 		{Amount: 1, Name: "data"},
 		{Amount: -1, Name: "shot"},
 		{Name: "rock", Amount: 40000},
@@ -61,7 +59,7 @@ func TestUpdate(t *testing.T) {
 	for k, v := range records {
 		db_test.Insert(k, v)
 	}
-	r := database.Record{Amount: 2, Name: "data"}
+	r := Record{Amount: 2, Name: "data"}
 	ok := db_test.Update(0, r)
 	if !ok {
 		t.Error("Index 0 is valid, data exist")
@@ -78,8 +76,8 @@ func TestUpdate(t *testing.T) {
 }
 
 func TestClear(t *testing.T) {
-	db_test := database.NewDatabase()
-	records := []database.Record{
+	db_test := NewDatabase()
+	records := []Record{
 		{Amount: 1, Name: "data"},
 		{Amount: -1, Name: "shot"},
 		{Name: "rock", Amount: 40000},
@@ -94,8 +92,8 @@ func TestClear(t *testing.T) {
 }
 
 func TestGet(t *testing.T) {
-	db_test := database.NewDatabase()
-	records := []database.Record{
+	db_test := NewDatabase()
+	records := []Record{
 		{Amount: 1, Name: "data"},
 		{Amount: -1, Name: "shot"},
 		{Name: "rock", Amount: 40000},

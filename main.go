@@ -63,14 +63,15 @@ func handleConnection(c net.Conn) {
 		}
 
 		h(writer, args)
+		log.Println("Loading data from file...")
 		writer.Flush()
 	}
 }
 
 func save() {
-	db_file, err := os.OpenFile(dbPath, os.O_CREATE|os.O_WRONLY, 0)
+	db_file, err := os.OpenFile(dbPath, os.O_CREATE|os.O_WRONLY, 0640)
 	if err != nil {
-		log.Panic("Failed to open database file for saving")
+		log.Panic("Failed to open database file for saving:", err)
 	}
 	defer db_file.Close()
 
@@ -109,10 +110,9 @@ func autoSave(seconds time.Duration) {
 func main() {
 	db_file, err := os.Open(dbPath)
 	if err == nil {
-		log.Println("Loading data from file...")
 		db.Deserialize(db_file)
 	} else if !os.IsNotExist(err) {
-		log.Fatal("Failed to load database from file")
+		log.Fatal("Failed to load database from file:", err)
 	}
 
 	listenAddress := ":1337"
